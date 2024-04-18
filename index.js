@@ -167,13 +167,6 @@ class GameObject {
     }
 
     update() {
-        if (editMode) {
-            if ((keys[" "] || keys["Enter"]) && editTimer > editDelay) {
-                gameScreen = GAMESCREENTYPE.GAME_TO_EDIT;
-                editTimer = 0;
-            }
-        }
-
         switch(this.type) {
             case GAMEOBJECTTYPE.BLOCK: {
                 break;
@@ -1032,6 +1025,18 @@ var typeDelay = 20;
 
 var worldShift = 0;
 
+var codeInputDivElement = document.getElementById("codeInputDiv");
+var codeOutputDivElement = document.getElementById("codeOutputDiv");
+
+var codeInputElement = document.getElementById("codeInput");
+var codeSubmitElement = document.getElementById("codeSubmit");
+var codeOutputElement = document.getElementById("codeOutput");
+
+codeSubmitElement.addEventListener("click", function(ev) {
+    readCode(codeInputElement.value);
+    codeInputElement.value = "";
+});
+
 function update() {
     switch (gameScreen) {
         case GAMESCREENTYPE.NULL_TO_TITLE: {
@@ -1089,7 +1094,14 @@ function update() {
             deathAnimTimer += deltaTime;
             goalAnimTimer += deltaTime;
             editTimer += deltaTime;
-        
+
+            if (editMode) {
+                if ((keys[" "] || keys["Enter"]) && editTimer > editDelay) {
+                    gameScreen = GAMESCREENTYPE.GAME_TO_EDIT;
+                    editTimer = 0;
+                }
+            }
+
             for (var i = 0; i < gameObjectList.length; i++) {
                 gameObjectList[i].update();
             }
@@ -1177,6 +1189,19 @@ function update() {
                 editTimer = 0;
                 gameScreen = GAMESCREENTYPE.EDIT_TO_GAME;
             }
+
+            // generate code
+            if (keys["c"] && !(keys["Meta"] || keys["Control"])) {
+                codeOutputElement.innerHTML = generateCode();
+                codeOutputDivElement.hidden = false;
+                codeInputDivElement.hidden = true;
+            }
+
+            // read code
+            if (keys["C"] && !(keys["Meta"] || keys["Control"])) {
+                codeOutputDivElement.hidden = true;
+                codeInputDivElement.hidden = false;
+            }
             break;
         }
         case GAMESCREENTYPE.EDIT_TO_GAME: {
@@ -1190,11 +1215,17 @@ function update() {
 
             editMode = true;
 
+            codeInputDivElement.hidden = true;
+            codeOutputDivElement.hidden = true;
+
             gameScreen = GAMESCREENTYPE.GAME;
             break;
         }
         case GAMESCREENTYPE.EDIT_TO_ALTER_SETTINGS: {
             typeTimer = typeDelay;
+
+            codeInputDivElement.hidden = true;
+            codeOutputDivElement.hidden = true;
 
             gameScreen = GAMESCREENTYPE.ALTER_SETTINGS;
             break;
@@ -1269,6 +1300,9 @@ function update() {
         case GAMESCREENTYPE.EDIT_TO_SHIFT_SETTINGS: {
             typeTimer = typeDelay;
             worldShift = String(worldShift);
+
+            codeInputDivElement.hidden = true;
+            codeOutputDivElement.hidden = true;
 
             gameScreen = GAMESCREENTYPE.SHIFT_SETTINGS;
             break;
