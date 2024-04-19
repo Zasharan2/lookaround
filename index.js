@@ -91,6 +91,8 @@ class Vector2 {
     }
 }
 
+var flashlight = new Vector2(0, 0);
+
 const GAMEOBJECTTYPE = {
     BLOCK: 0,
     PLAYER: 1,
@@ -102,7 +104,8 @@ const GAMEOBJECTTYPE = {
     BLUESWITCH: 5.1,
     REDBLOCK: 6.0,
     REDSWITCH: 6.1,
-    ALTER: 7.0
+    ALTER: 7.0,
+    UNSEEN: 8.0,
 };
 
 const gameObjectSize = 16;
@@ -172,7 +175,7 @@ class GameObject {
                 break;
             }
             case GAMEOBJECTTYPE.PLAYER: {
-                var dist = Math.sqrt(Math.pow(mouseX - (this.pos.x + (gameObjectSize / 2)), 2) + Math.pow(mouseY - (this.pos.y + (gameObjectSize / 2)), 2));
+                var dist = Math.sqrt(Math.pow(flashlight.x - (this.pos.x + (gameObjectSize / 2)), 2) + Math.pow(flashlight.y - (this.pos.y + (gameObjectSize / 2)), 2));
                 if (dist < lightRadius + 10) {
                     if (debugMode) {
                         if (mouseDown) {
@@ -706,6 +709,11 @@ class GameObject {
                 }
                 break;
             }
+            case GAMEOBJECTTYPE.UNSEEN: {
+                ctx.fillStyle = "#b8af0d";
+                ctx.fillRect(this.pos.x, this.pos.y, gameObjectSize, gameObjectSize);
+                break;
+            }
             default: {
                 break;
             }
@@ -1040,13 +1048,17 @@ codeSubmitElement.addEventListener("click", function(ev) {
 function update() {
     switch (gameScreen) {
         case GAMESCREENTYPE.NULL_TO_TITLE: {
-            for (var i = 0; i < 300; i++) {
-                randomParticles.push([new Vector2(Math.random() * 512, Math.random() * 512), new Vector2((Math.random() * 3) - 1.5, (Math.random() * 3) - 1.5), Math.random() * 5]);
+            for (var i = 0; i < 400; i++) {
+                randomParticles.push([new Vector2(Math.random() * 512, Math.random() * 512), new Vector2((Math.random() * 3) - 1.5, (Math.random() * 3) - 1.5), Math.random() * 8, [Math.random() * 255, Math.random() * 255, Math.random() * 255]]);
             }
             gameScreen = GAMESCREENTYPE.TITLE;
             break;
         }
         case GAMESCREENTYPE.TITLE: {
+            // flashlight update
+            flashlight.x = mouseX;
+            flashlight.y = mouseY;
+
             // particles
             for (var i = 0; i < randomParticles.length; i++) {
                 randomParticles[i][0].x += randomParticles[i][1].x * deltaTime;
@@ -1091,10 +1103,39 @@ function update() {
             break;
         }
         case GAMESCREENTYPE.GAME: {
+            // timers
             deathAnimTimer += deltaTime;
             goalAnimTimer += deltaTime;
             editTimer += deltaTime;
 
+            // flashlight update
+            flashlight.x = mouseX;
+            flashlight.y = mouseY;
+            var unseenCheck = true;
+            while (unseenCheck) {
+                unseenCheck = false;
+                for (var i = 0; i < gameObjectList.length; i++) {
+                    if (gameObjectList[i].type == GAMEOBJECTTYPE.UNSEEN) {
+                        if ((Math.sqrt(Math.pow(flashlight.x - (gameObjectList[i].pos.x + (gameObjectSize / 2)), 2) + Math.pow(flashlight.y - (gameObjectList[i].pos.y + (gameObjectSize / 2)), 2))) < (lightRadius + 10)) {
+                            var tempAngle = Math.atan2(flashlight.y - (gameObjectList[i].pos.y + (gameObjectSize / 2)), flashlight.x - (gameObjectList[i].pos.x + (gameObjectSize / 2)));
+    
+                            var dx = Math.cos(tempAngle);
+                            var dy = Math.sin(tempAngle);
+                            flashlight.x += dx;
+                            flashlight.y += dy;
+                        }
+                    }
+                }
+                for (var i = 0; i < gameObjectList.length; i++) {
+                    if (gameObjectList[i].type == GAMEOBJECTTYPE.UNSEEN) {
+                        if ((Math.sqrt(Math.pow(flashlight.x - (gameObjectList[i].pos.x + (gameObjectSize / 2)), 2) + Math.pow(flashlight.y - (gameObjectList[i].pos.y + (gameObjectSize / 2)), 2))) < (lightRadius + 10)) {
+                            unseenCheck = true;
+                        }
+                    }
+                }
+            }
+
+            // back to edit
             if (editMode) {
                 if ((keys[" "] || keys["Enter"]) && editTimer > editDelay) {
                     gameScreen = GAMESCREENTYPE.GAME_TO_EDIT;
@@ -1102,6 +1143,18 @@ function update() {
                 }
             }
 
+            // reset
+            if (keys["r"] && editTimer > editDelay) {
+                if (editMode) {
+                    gameScreen = GAMESCREENTYPE.GAME_TO_EDIT;
+                    editTimer = 0;
+                } else {
+                    death();
+                    editTimer = 0;
+                }
+            }
+
+            // update gameobjects
             for (var i = 0; i < gameObjectList.length; i++) {
                 gameObjectList[i].update();
             }
@@ -1172,6 +1225,10 @@ function update() {
                     editingAlterShift = eGameObjectList[i].shift;
                     gameScreen = GAMESCREENTYPE.EDIT_TO_ALTER_SETTINGS;
                 }
+            }
+            // unseen
+            if (keys["7"]) {
+                placeGameObject(GAMEOBJECTTYPE.UNSEEN);
             }
 
             // edit world shift
@@ -1276,7 +1333,7 @@ function update() {
             }
             if (keys["Backspace"] && typeTimer > typeDelay) {
                 typeTimer = 0;
-                editingAlterShift = editingAlterShift.slice(0, -1);
+                editingAlterShift = String(editingAlterShift).slice(0, -1);
             }
 
             // submit setting
@@ -1388,7 +1445,7 @@ function render() {
             // particles
             for (var i = 0; i < randomParticles.length; i++) {
                 ctx.beginPath();
-                ctx.fillStyle = "#ffffffff";
+                ctx.fillStyle = "rgba(" + randomParticles[i][3][0] + "," + randomParticles[i][3][1] + "," + randomParticles[i][3][2] + ", 255)";
                 ctx.fillRect(randomParticles[i][0].x, randomParticles[i][0].y, randomParticles[i][2], randomParticles[i][2]);
             }
 
@@ -1428,7 +1485,7 @@ function render() {
             ctx.beginPath();
             ctx.fillStyle = "rgba("+(255 - Math.floor(deathAnimTimer * 10))+","+(255 - Math.floor(goalAnimTimer * 10))+",0,255)"
             ctx.rect(0, 0, 512, 512);
-            ctx.arc(mouseX, mouseY, lightRadius, 0, 2*Math.PI, true);
+            ctx.arc(flashlight.x, flashlight.y, lightRadius, 0, 2*Math.PI, true);
             ctx.fill();
             break;
         }
@@ -1456,7 +1513,7 @@ function render() {
             ctx.beginPath();
             ctx.fillStyle = "rgba("+(255 - Math.floor(deathAnimTimer * 10))+","+(255 - Math.floor(goalAnimTimer * 10))+",0,255)"
             ctx.rect(0, 0, 512, 512);
-            ctx.arc(mouseX, mouseY, lightRadius, 0, 2*Math.PI, true);
+            ctx.arc(flashlight.x, flashlight.y, lightRadius, 0, 2*Math.PI, true);
             ctx.fill();
             break;
         }
