@@ -1,6 +1,14 @@
 var c = document.getElementById("gameCanvas");
 var ctx = c.getContext("2d");
 
+const displayWidth = 512;
+const displayHeight = 512;
+const scale = 4;
+c.style.width = displayWidth + 'px';
+c.style.height = displayHeight + 'px';
+c.width = displayWidth * scale;
+c.height = displayHeight * scale;
+
 var keys = [];
 
 document.addEventListener("keydown", function (event) {
@@ -111,7 +119,7 @@ const GAMEOBJECTTYPE = {
 const gameObjectSize = 16;
 const lightRadius = 40;
 
-const debugMode = true;
+const debugMode = false;
 
 var deathTrigger = false;
 var goalTrigger = false;
@@ -609,109 +617,109 @@ class GameObject {
         switch(this.type) {
             case GAMEOBJECTTYPE.BLOCK: {
                 ctx.fillStyle = "#444444ff";
-                ctx.fillRect(this.pos.x, this.pos.y, gameObjectSize, gameObjectSize);
+                ctx.fillRect(this.pos.x * scale, this.pos.y * scale, gameObjectSize * scale, gameObjectSize * scale);
                 break;
             }
             case GAMEOBJECTTYPE.PLAYER: {
                 ctx.fillStyle = "#ff0000ff";
-                ctx.fillRect(this.pos.x, this.pos.y, gameObjectSize, gameObjectSize);
+                ctx.fillRect(this.pos.x * scale, this.pos.y * scale, gameObjectSize * scale, gameObjectSize * scale);
                 break;
             }
             case GAMEOBJECTTYPE.GOAL: {
                 ctx.fillStyle = "#fce303ff";
-                ctx.fillRect(this.pos.x, this.pos.y, gameObjectSize, gameObjectSize);
+                ctx.fillRect(this.pos.x * scale, this.pos.y * scale, gameObjectSize * scale, gameObjectSize * scale);
                 break;
             }
             case GAMEOBJECTTYPE.LAVA: {
                 ctx.fillStyle = "#ff8742ff";
-                ctx.fillRect(this.pos.x, this.pos.y, gameObjectSize, gameObjectSize);
+                ctx.fillRect(this.pos.x * scale, this.pos.y * scale, gameObjectSize * scale, gameObjectSize * scale);
                 break;
             }
             case GAMEOBJECTTYPE.GREENSWITCH: {
                 if (this.toggled) {
                     ctx.fillStyle = "#00ff00ff";
-                    ctx.fillRect(this.pos.x + (gameObjectSize * 0.125), this.pos.y + (gameObjectSize * 0.75), gameObjectSize * 0.75, gameObjectSize * 0.125);
+                    ctx.fillRect((this.pos.x + (gameObjectSize * 0.125)) * scale, (this.pos.y + (gameObjectSize * 0.75)) * scale, (gameObjectSize * 0.75) * scale, (gameObjectSize * 0.125) * scale);
                     ctx.fillStyle = "#000000ff";
-                    ctx.fillRect(this.pos.x, this.pos.y + (gameObjectSize * 0.875), gameObjectSize, (gameObjectSize * 0.125));
+                    ctx.fillRect(this.pos.x * scale, (this.pos.y + (gameObjectSize * 0.875)) * scale, gameObjectSize * scale, ((gameObjectSize * 0.125)) * scale);
                 } else {
                     ctx.fillStyle = "#00ff00ff";
-                    ctx.fillRect(this.pos.x + (gameObjectSize * 0.125), this.pos.y + (gameObjectSize * 0.125), gameObjectSize * 0.75, gameObjectSize * 0.75);
+                    ctx.fillRect((this.pos.x + (gameObjectSize * 0.125)) * scale, (this.pos.y + (gameObjectSize * 0.125)) * scale, (gameObjectSize * 0.75) * scale, (gameObjectSize * 0.75) * scale);
                     ctx.fillStyle = "#000000ff";
-                    ctx.fillRect(this.pos.x, this.pos.y + (gameObjectSize * 0.875), gameObjectSize, (gameObjectSize * 0.125));
+                    ctx.fillRect(this.pos.x * scale, (this.pos.y + (gameObjectSize * 0.875)) * scale, gameObjectSize * scale, ((gameObjectSize * 0.125)) * scale);
                 }
                 break;
             }
             case GAMEOBJECTTYPE.BLUESWITCH: {
                 if (this.toggled) {
                     ctx.fillStyle = "#00ffffff";
-                    ctx.fillRect(this.pos.x + (gameObjectSize * 0.125), this.pos.y + (gameObjectSize * 0.75), gameObjectSize * 0.75, gameObjectSize * 0.125);
+                    ctx.fillRect((this.pos.x + (gameObjectSize * 0.125)) * scale, (this.pos.y + (gameObjectSize * 0.75)) * scale, gameObjectSize * 0.75 * scale, gameObjectSize * 0.125 * scale);
                     ctx.fillStyle = "#000000ff";
-                    ctx.fillRect(this.pos.x, this.pos.y + (gameObjectSize * 0.875), gameObjectSize, (gameObjectSize * 0.125));
+                    ctx.fillRect(this.pos.x * scale, (this.pos.y + (gameObjectSize * 0.875)) * scale, gameObjectSize * scale, ((gameObjectSize * 0.125)) * scale);
                 } else {
                     ctx.fillStyle = "#00ffffff";
-                    ctx.fillRect(this.pos.x + (gameObjectSize * 0.125), this.pos.y + (gameObjectSize * 0.125), gameObjectSize * 0.75, gameObjectSize * 0.75);
+                    ctx.fillRect((this.pos.x + (gameObjectSize * 0.125)) * scale, (this.pos.y + (gameObjectSize * 0.125)) * scale, gameObjectSize * 0.75 * scale, gameObjectSize * 0.75 * scale);
                     ctx.fillStyle = "#000000ff";
-                    ctx.fillRect(this.pos.x, this.pos.y + (gameObjectSize * 0.875), gameObjectSize, (gameObjectSize * 0.125));
+                    ctx.fillRect(this.pos.x * scale, (this.pos.y + (gameObjectSize * 0.875)) * scale, gameObjectSize * scale, ((gameObjectSize * 0.125)) * scale);
                 }
                 break;
             }
             case GAMEOBJECTTYPE.REDSWITCH: {
                 if (this.toggled) {
                     ctx.fillStyle = "#ff00ffff";
-                    ctx.fillRect(this.pos.x + (gameObjectSize * 0.125), this.pos.y + (gameObjectSize * 0.75), gameObjectSize * 0.75, gameObjectSize * 0.125);
+                    ctx.fillRect((this.pos.x + (gameObjectSize * 0.125)) * scale, (this.pos.y + (gameObjectSize * 0.75)) * scale, gameObjectSize * 0.75 * scale, gameObjectSize * 0.125 * scale);
                     ctx.fillStyle = "#000000ff";
-                    ctx.fillRect(this.pos.x, this.pos.y + (gameObjectSize * 0.875), gameObjectSize, (gameObjectSize * 0.125));
+                    ctx.fillRect(this.pos.x * scale, (this.pos.y + (gameObjectSize * 0.875)) * scale, gameObjectSize * scale, ((gameObjectSize * 0.125)) * scale);
                 } else {
                     ctx.fillStyle = "#ff00ffff";
-                    ctx.fillRect(this.pos.x + (gameObjectSize * 0.125), this.pos.y + (gameObjectSize * 0.125), gameObjectSize * 0.75, gameObjectSize * 0.75);
+                    ctx.fillRect((this.pos.x + (gameObjectSize * 0.125)) * scale, (this.pos.y + (gameObjectSize * 0.125)) * scale, gameObjectSize * 0.75 * scale, gameObjectSize * 0.75 * scale);
                     ctx.fillStyle = "#000000ff";
-                    ctx.fillRect(this.pos.x, this.pos.y + (gameObjectSize * 0.875), gameObjectSize, (gameObjectSize * 0.125));
+                    ctx.fillRect(this.pos.x * scale, (this.pos.y + (gameObjectSize * 0.875)) * scale, gameObjectSize * scale, ((gameObjectSize * 0.125)) * scale);
                 }
                 break;
             }
             case GAMEOBJECTTYPE.GREENBLOCK: {
                 if (this.toggled) {
                     ctx.fillStyle = "#00ff00ff";
-                    ctx.fillRect(this.pos.x, this.pos.y, gameObjectSize, gameObjectSize);
+                    ctx.fillRect(this.pos.x * scale, this.pos.y * scale, gameObjectSize * scale, gameObjectSize * scale);
                 } else {
                     ctx.fillStyle = "#008800ff";
-                    ctx.fillRect(this.pos.x, this.pos.y, gameObjectSize, gameObjectSize);
+                    ctx.fillRect(this.pos.x * scale, this.pos.y * scale, gameObjectSize * scale, gameObjectSize * scale);
                 }
                 break;
             }
             case GAMEOBJECTTYPE.BLUEBLOCK: {
                 if (this.toggled) {
                     ctx.fillStyle = "#00ffffff";
-                    ctx.fillRect(this.pos.x, this.pos.y, gameObjectSize, gameObjectSize);
+                    ctx.fillRect(this.pos.x * scale, this.pos.y * scale, gameObjectSize * scale, gameObjectSize * scale);
                 } else {
                     ctx.fillStyle = "#008888ff";
-                    ctx.fillRect(this.pos.x, this.pos.y, gameObjectSize, gameObjectSize);
+                    ctx.fillRect(this.pos.x * scale, this.pos.y * scale, gameObjectSize * scale, gameObjectSize * scale);
                 }
                 break;
             }
             case GAMEOBJECTTYPE.REDBLOCK: {
                 if (this.toggled) {
                     ctx.fillStyle = "#ff00ffff";
-                    ctx.fillRect(this.pos.x, this.pos.y, gameObjectSize, gameObjectSize);
+                    ctx.fillRect(this.pos.x * scale, this.pos.y * scale, gameObjectSize * scale, gameObjectSize * scale);
                 } else {
                     ctx.fillStyle = "#880088ff";
-                    ctx.fillRect(this.pos.x, this.pos.y, gameObjectSize, gameObjectSize);
+                    ctx.fillRect(this.pos.x * scale, this.pos.y * scale, gameObjectSize * scale, gameObjectSize * scale);
                 }
                 break;
             }
             case GAMEOBJECTTYPE.ALTER: {
                 if (gameScreen == GAMESCREENTYPE.EDIT) {
                     ctx.fillStyle = "#000000ff";
-                    ctx.fillRect(this.pos.x, this.pos.y, (0.125 * gameObjectSize), gameObjectSize);
-                    ctx.fillRect(this.pos.x + (0.875 * gameObjectSize), this.pos.y, (0.125 * gameObjectSize), gameObjectSize);
-                    ctx.fillRect(this.pos.x, this.pos.y, gameObjectSize, (0.125 * gameObjectSize));
-                    ctx.fillRect(this.pos.x, this.pos.y + (0.875 * gameObjectSize), gameObjectSize, (0.125 * gameObjectSize));
+                    ctx.fillRect(this.pos.x * scale, this.pos.y * scale, (0.125 * gameObjectSize) * scale, gameObjectSize * scale);
+                    ctx.fillRect((this.pos.x + (0.875 * gameObjectSize)) * scale, this.pos.y * scale, (0.125 * gameObjectSize) * scale, gameObjectSize * scale);
+                    ctx.fillRect(this.pos.x * scale, this.pos.y * scale, gameObjectSize * scale, (0.125 * gameObjectSize) * scale);
+                    ctx.fillRect(this.pos.x * scale, (this.pos.y + (0.875 * gameObjectSize)) * scale, gameObjectSize * scale, (0.125 * gameObjectSize) * scale);
                 }
                 break;
             }
             case GAMEOBJECTTYPE.UNSEEN: {
                 ctx.fillStyle = "#b8af0d";
-                ctx.fillRect(this.pos.x, this.pos.y, gameObjectSize, gameObjectSize);
+                ctx.fillRect(this.pos.x * scale, this.pos.y * scale, gameObjectSize * scale, gameObjectSize * scale);
                 break;
             }
             default: {
@@ -1451,20 +1459,20 @@ function render() {
             // background (white)
             ctx.beginPath();
             ctx.fillStyle = "#222222ff";
-            ctx.fillRect(0, 0, 512, 512);
+            ctx.fillRect(0, 0, 512 * scale, 512 * scale);
 
             // particles
             for (var i = 0; i < randomParticles.length; i++) {
                 ctx.beginPath();
                 ctx.fillStyle = "rgba(" + randomParticles[i][3][0] + "," + randomParticles[i][3][1] + "," + randomParticles[i][3][2] + ", 255)";
-                ctx.fillRect(randomParticles[i][0].x, randomParticles[i][0].y, randomParticles[i][2], randomParticles[i][2]);
+                ctx.fillRect(randomParticles[i][0].x * scale, randomParticles[i][0].y * scale, randomParticles[i][2] * scale, randomParticles[i][2] * scale);
             }
 
             // title text
             ctx.beginPath();
             ctx.fillStyle = "#ffffffff";
-            ctx.font = "70px Comic Sans MS";
-            ctx.fillText("Look Around", 50, 70);
+            ctx.font = String(scale * 70)+"px Comic Sans MS";
+            ctx.fillText("Look Around", 50 * scale, 70 * scale);
 
             // play text
             ctx.beginPath();
@@ -1476,8 +1484,8 @@ function render() {
             } else {
                 ctx.fillStyle = "#ffffffff";
             }
-            ctx.font = "40px Comic Sans MS";
-            ctx.fillText("Play", playButtonPos.x, playButtonPos.y);
+            ctx.font = String(scale * 40)+"px Comic Sans MS";
+            ctx.fillText("Play", playButtonPos.x * scale, playButtonPos.y * scale);
 
             // edit text
             ctx.beginPath();
@@ -1489,14 +1497,14 @@ function render() {
             } else {
                 ctx.fillStyle = "#ffffffff";
             }
-            ctx.font = "40px Comic Sans MS";
-            ctx.fillText("Edit", editButtonPos.x, editButtonPos.y);
+            ctx.font = String(scale * 40)+"px Comic Sans MS";
+            ctx.fillText("Edit", editButtonPos.x * scale, editButtonPos.y * scale);
 
             // mouse light
             ctx.beginPath();
             ctx.fillStyle = "rgba("+(255 - Math.floor(deathAnimTimer * 10))+","+(255 - Math.floor(goalAnimTimer * 10))+",0,255)"
-            ctx.rect(0, 0, 512, 512);
-            ctx.arc(flashlight.x, flashlight.y, lightRadius, 0, 2*Math.PI, true);
+            ctx.rect(0, 0, 512*scale, 512*scale);
+            ctx.arc(flashlight.x*scale, flashlight.y*scale, lightRadius*scale, 0, 2*Math.PI, true);
             ctx.fill();
             break;
         }
@@ -1504,7 +1512,7 @@ function render() {
             // background (white)
             ctx.beginPath();
             ctx.fillStyle = "#ffffffff";
-            ctx.fillRect(0, 0, 512, 512);
+            ctx.fillRect(0, 0, 512 * scale, 512 * scale);
 
             // rendering here
             for (var i = 0; i < gameObjectList.length; i++) {
@@ -1523,8 +1531,8 @@ function render() {
             // mouse light
             ctx.beginPath();
             ctx.fillStyle = "rgba("+(255 - Math.floor(deathAnimTimer * 10))+","+(255 - Math.floor(goalAnimTimer * 10))+",0,255)"
-            ctx.rect(0, 0, 512, 512);
-            ctx.arc(flashlight.x, flashlight.y, lightRadius, 0, 2*Math.PI, true);
+            ctx.rect(0, 0, 512*scale, 512*scale);
+            ctx.arc(flashlight.x*scale, flashlight.y*scale, lightRadius*scale, 0, 2*Math.PI, true);
             ctx.fill();
             break;
         }
@@ -1532,7 +1540,7 @@ function render() {
             // background (white)
             ctx.beginPath();
             ctx.fillStyle = "#ffffffff";
-            ctx.fillRect(0, 0, 512, 512);
+            ctx.fillRect(0, 0, 512 * scale, 512 * scale);
             
             // rendering here
             for (var i = 0; i < eGameObjectList.length; i++) {
@@ -1542,63 +1550,63 @@ function render() {
             // darken selected tile
             ctx.beginPath();
             ctx.fillStyle = "#00000022";
-            ctx.fillRect(gameObjectSize * Math.floor(mouseX / gameObjectSize), gameObjectSize * Math.floor(mouseY / gameObjectSize), gameObjectSize, gameObjectSize);
+            ctx.fillRect(gameObjectSize * Math.floor(mouseX / gameObjectSize) * scale, gameObjectSize * Math.floor(mouseY / gameObjectSize) * scale, gameObjectSize * scale, gameObjectSize * scale);
 
             // display shift
             ctx.beginPath();
             ctx.fillStyle = "#0000ffff";
-            ctx.font = "15px Comic Sans MS";
-            ctx.fillText(Number(worldShift), 3, 16);
+            ctx.font = String(scale * 15)+"px Comic Sans MS";
+            ctx.fillText(Number(worldShift), 3 * scale, 16 * scale);
             break;
         }
         case GAMESCREENTYPE.ALTER_SETTINGS: {
             // background (black)
             ctx.beginPath();
             ctx.fillStyle = "#000000ff";
-            ctx.fillRect(0, 0, 512, 512);
+            ctx.fillRect(0, 0, 512 * scale, 512 * scale);
 
             // text
             ctx.beginPath();
             ctx.fillStyle = "#ffffffff";
-            ctx.font = "30px Comic Sans MS";
-            ctx.fillText("Shift (Alter):", 20, 40);
+            ctx.font = String(scale * 30)+"px Comic Sans MS";
+            ctx.fillText("Shift (Alter):", 20 * scale, 40 * scale);
 
             // shift value
             ctx.beginPath();
             ctx.fillStyle = "#ffffffff";
-            ctx.font = "30px Comic Sans MS";
-            ctx.fillText(Number(editingAlterShift), 20, 80);
+            ctx.font = String(scale * 30)+"px Comic Sans MS";
+            ctx.fillText(Number(editingAlterShift), 20 * scale, 80 * scale);
 
             // submit text
             ctx.beginPath();
             ctx.fillStyle = "#ffffffff";
-            ctx.font = "30px Comic Sans MS";
-            ctx.fillText("Enter to submit", 20, 500);
+            ctx.font = String(scale * 30)+"px Comic Sans MS";
+            ctx.fillText("Enter to submit", 20 * scale, 500 * scale);
             break;
         }
         case GAMESCREENTYPE.SHIFT_SETTINGS: {
             // background (black)
             ctx.beginPath();
             ctx.fillStyle = "#000000ff";
-            ctx.fillRect(0, 0, 512, 512);
+            ctx.fillRect(0, 0, 512 * scale, 512 * scale);
 
             // text
             ctx.beginPath();
             ctx.fillStyle = "#ffffffff";
-            ctx.font = "30px Comic Sans MS";
-            ctx.fillText("Shift (World):", 20, 40);
+            ctx.font = String(scale * 30)+"px Comic Sans MS";
+            ctx.fillText("Shift (World):", 20 * scale, 40 * scale);
 
             // shift value
             ctx.beginPath();
             ctx.fillStyle = "#ffffffff";
-            ctx.font = "30px Comic Sans MS";
-            ctx.fillText(Number(worldShift), 20, 80);
+            ctx.font = String(scale * 30)+"px Comic Sans MS";
+            ctx.fillText(Number(worldShift), 20 * scale, 80 * scale);
 
             // submit text
             ctx.beginPath();
             ctx.fillStyle = "#ffffffff";
-            ctx.font = "30px Comic Sans MS";
-            ctx.fillText("Enter to submit", 20, 500);
+            ctx.font = String(scale * 30)+"px Comic Sans MS";
+            ctx.fillText("Enter to submit", 20 * scale, 500 * scale);
             break;
         }
         default: {
